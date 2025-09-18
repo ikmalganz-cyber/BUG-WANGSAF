@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MALZZ CRASH</title>
+<style>
+/* --- GLOBAL --- */
+body {
+  margin:0; padding:0;
+  font-family:'Segoe UI',sans-serif;
+  background: linear-gradient(135deg,#0a0a0a,#111111);
+  color:#ff0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* --- LOGIN PAGE --- */
+#loginPage {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  max-width:400px;
+  padding:40px;
+  background:#111;
+  border-radius:15px;
+  border:2px solid #ff0;
+  box-shadow:0 0 40px rgba(255,255,0,0.5);
+}
+#loginPage img {width:60%; max-height:120px; margin-bottom:20px;}
+#loginPage h2 {margin-bottom:20px; font-size:24px; text-align:center;}
+#loginPage input {width:100%; padding:12px; margin:8px 0; border-radius:10px; border:2px solid #ff0; background:#000; color:#ff0; font-size:15px;}
+#loginPage input:focus {border-color:#fff200; box-shadow:0 0 8px #fff200; outline:none;}
+#loginPage button {width:100%; padding:12px; border:none; border-radius:10px; background:linear-gradient(90deg,#ff0,#fff200); color:#000; font-weight:bold; font-size:16px; cursor:pointer; box-shadow:0 0 15px rgba(255,255,0,0.5);}
+#loginPage button:hover {transform:scale(1.05); box-shadow:0 0 25px #ff0;}
+
+/* --- DASHBOARD --- */
+#dashboard {display:none; flex-direction:column; align-items:center; padding:20px; width:100%; max-width:420px;}
+
+/* HEADER */
+header {
+  width:100%;
+  text-align:center;
+  font-size:24px;
+  font-weight:bold;
+  padding:15px;
+  background:linear-gradient(90deg,#ff0,#fff200);
+  color:#000;
+  border-radius:12px;
+  box-shadow:0 4px 20px rgba(255,255,0,0.6);
+  margin-bottom:20px;
+}
+
+/* PROFIL CARD */
+.profile {
+  display:flex; flex-direction:column; align-items:center;
+  background:#111; border-radius:15px; padding:20px;
+  width:95%; max-width:400px; box-shadow:0 0 30px rgba(255,255,0,0.5);
+  margin-bottom:20px;
+}
+.profile img {width:100px;height:100px;border-radius:15px; box-shadow:0 0 25px #ff0;}
+.profile h2{font-size:22px; margin:5px 0;}
+.profile p{font-size:15px; margin:2px 0;}
+
+/* FORM CARD */
+.card {
+  background:#111; border-radius:15px; padding:20px;
+  width:95%; max-width:400px; box-shadow:0 0 25px rgba(255,255,0,0.4); margin-bottom:20px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.card:hover {transform:scale(1.02); box-shadow:0 0 35px rgba(255,255,0,0.6);}
+.card h3 {font-size:16px; margin-bottom:8px;}
+.card input, .card select, .card textarea {width:100%; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid #ff0; background:#000; color:#ff0; font-size:15px;}
+.card button {width:100%; padding:12px; border-radius:10px; border:none; background:linear-gradient(90deg,#ff0,#fff200); color:#000; font-weight:bold; font-size:16px; cursor:pointer; box-shadow:0 0 15px rgba(255,255,0,0.5);}
+.card button:hover {transform:scale(1.05); box-shadow:0 0 25px #ff0;}
+
+/* RIWAYAT */
+#riwayatList li {font-size:14px; padding:6px 8px; margin-bottom:5px; border-radius:8px; background:rgba(255,255,0,0.1); list-style:none;}
+
+/* NOTIF SUKSES */
+#bugSuccess {display:none; text-align:center; margin:10px 0; padding:12px; border-radius:12px; background:#0f0; color:#000; font-weight:bold; box-shadow:0 0 20px #0f0; white-space:pre-line;}
+
+/* NAVBAR */
+.navbar {position:fixed; bottom:0; left:0; width:100%; background:#111; display:flex; justify-content:space-around; padding:10px 0; box-shadow:0 -2px 8px rgba(0,0,0,0.7);}
+.navbar button {background:none; border:none; color:#ff0; font-size:22px; cursor:pointer; transition:0.3s;}
+.navbar button:hover {transform:scale(1.2);}
+
+/* --- MODAL --- */
+.modal {display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000;}
+.modal-content {
+  background: #111; 
+  border: 2px solid #ff0;
+  border-radius: 15px;
+  padding: 15px;
+  width: 90%;
+  max-width: 350px; /* lebih kecil untuk tambah user & info admin */
+  box-shadow: 0 0 30px rgba(255,255,0,0.6);
+  transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s;
+}
+.modal-content:hover {transform: scale(1.03); box-shadow: 0 0 40px rgba(255,255,0,0.8);}
+.modal-header {font-weight:bold; font-size:18px; color:#ff0; margin-bottom:12px; text-align:center; text-shadow:0 0 6px #ff0;}
+.close {float:right; cursor:pointer; font-weight:bold; font-size:18px; color:#ff0; transition:0.3s;}
+.close:hover {color:#fff200;}
+.modal-content input, .modal-content select, .modal-content textarea {
+  width:100%; padding:10px; margin:6px 0; border-radius:10px; border:2px solid #ff0; background:#000; color:#ff0; font-size:14px;
+}
+.modal-content input:focus, .modal-content select:focus, .modal-content textarea:focus {
+  border-color:#fff200; box-shadow:0 0 8px #fff200; outline:none;
+}
+.modal-content button {width:100%; padding:12px; border-radius:10px; border:none; background:linear-gradient(90deg,#ff0,#fff200); color:#000; font-weight:bold; font-size:16px; cursor:pointer; box-shadow:0 0 15px rgba(255,255,0,0.5); margin-top:8px;}
+.modal-content button:hover {transform:scale(1.05); box-shadow:0 0 25px #ff0;}
+
+/* --- MODAL TELEGRAM --- */
+.animate-modal {transform: scale(0.7); opacity:0; transition: transform 0.4s ease, opacity 0.4s ease;}
+.modal.show .animate-modal {transform: scale(1); opacity:1;}
+.telegram-btn img {transition: transform 0.3s, filter 0.3s;}
+.telegram-btn img:hover {transform: scale(1.2) rotate(15deg); filter: drop-shadow(0 0 10px #00bfff);}
+</style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage">
+  <img src="https://files.catbox.moe/t2mvx0.jpg" alt="Login Banner">
+  <h2>Login MALZZ CRASH</h2>
+  <input type="text" id="loginUsername" placeholder="Username">
+  <input type="password" id="loginPassword" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+<header>⚡ MALZZ CRASH ⚡</header>
+
+<div class="profile card">
+  <img src="https://files.catbox.moe/frfwa1.jpg" alt="iconUser">
+  <h2 id="userName">Loading...</h2>
+  <p id="userRole">Role: </p>
+  <p id="userExpire">Exp: <span id="expVal">30 hari</span></p>
+</div>
+
+<div class="card">
+  <h3>🎯 Target Number</h3>
+  <input type="text" id="target" placeholder="e.g. +62xxxxxxxxxx">
+  <h3>🛠 Select Bug</h3>
+  <select id="fitur">
+    <option>Pilih Bug</option>
+    <option>Delay Invis Hard (NEW)</option>
+    <option>Delay Invis Easy</option>
+    <option>IOS Force X Blank</option>
+    <option>New UI Crash</option>
+    <option>Force Close</option>
+    <option>Blank Invis</option>
+  </select>
+  <button onclick="kirimBug()">🚀 SEND BUG</button>
+  <div id="bugSuccess"></div>
+</div>
+
+<div class="card">
+  <h3>📝 Riwayat</h3>
+  <ul id="riwayatList"></ul>
+</div>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <button onclick="openModal('userModal')">🏠</button>
+  <button onclick="handleHPClick()">📱</button>
+  <button onclick="openModal('infoAdminModal')">⚡</button>
+</div>
+
+<!-- MODAL USER INFO -->
+<div id="userModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('userModal')">&times;</span>
+    <div class="modal-header">User Info</div>
+    <p><strong>Username:</strong> <span id="modalUsername"></span></p>
+    <p><strong>Role:</strong> <span id="modalRole"></span></p>
+    <p><strong>Exp:</strong> <span id="modalExp">30 hari</span></p>
+  </div>
+</div>
+
+<!-- MODAL ADD USER -->
+<div id="addUserModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('addUserModal')">&times;</span>
+    <div class="modal-header">Tambah User</div>
+    <input type="text" id="newUsername" placeholder="Username">
+    <input type="text" id="newPassword" placeholder="Password">
+    <select id="newRole">
+      <option value="USER">USER</option>
+      <option value="RESELLER">RESELLER</option>
+      <option value="ADMINISTRATOR">ADMINISTRATOR</option>
+    </select>
+    <select id="newExp">
+      <option value="7 hari">7 hari</option>
+      <option value="30 hari" selected>30 hari</option>
+      <option value="permanen">permanen</option>
+    </select>
+    <button onclick="addUser()">Tambah User</button>
+  </div>
+</div>
+
+<!-- MODAL INFO ADMIN -->
+<div id="infoAdminModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('infoAdminModal')">&times;</span>
+    <div class="modal-header">Info Admin</div>
+    <textarea id="adminMessage" placeholder="Ketik info admin di sini"></textarea>
+    <button onclick="sendAdminInfo()">Kirim</button>
+  </div>
+</div>
+
+<!-- MODAL TELEGRAM USER -->
+<div id="kendalaUserModal" class="modal">
+  <div class="modal-content animate-modal">
+    <span class="close" onclick="closeModal('kendalaUserModal')">&times;</span>
+    <div class="modal-header">ADA KENDALA?</div>
+    <p style="text-align:center; font-size:16px;">Hubungi Developer</p>
+    <div style="text-align:center; margin-top:10px;">
+      <button onclick="copyTelegram()" class="telegram-btn">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" style="width:50px; height:50px;">
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// --- USERS & LOGIN ---
+let users = [
+  {username:"admin", password:"admin123", role:"ADMINISTRATOR", exp:"permanen"},
+  {username:"reseller", password:"res123", role:"RESELLER", exp:"30 hari"},
+  {username:"user1", password:"user123", role:"USER", exp:"7 hari"}
+];
+let riwayat = JSON.parse(localStorage.getItem("riwayat")) || [];
+let currentUser = {username:"", role:"USER", exp:""};
+
+function isExpired(exp){ if(exp==="permanen") return false; return parseFloat(exp)<=0; }
+
+function login(){
+  const u=document.getElementById("loginUsername").value.trim();
+  const p=document.getElementById("loginPassword").value.trim();
+  let found = users.find(x=>x.username===u && x.password===p);
+  if(!found){alert("Username/Password salah ❌"); return;}
+  if(isExpired(found.exp)){alert("Akun Expired ❌"); return;}
+  currentUser = found;
+  document.getElementById("loginPage").style.display="none";
+  document.getElementById("dashboard").style.display="flex";
+  loadDashboard();
+}
+
+function loadDashboard(){
+  document.getElementById("userName").textContent=currentUser.username;
+  document.getElementById("modalUsername").textContent=currentUser.username;
+  document.getElementById("userRole").textContent="Role: "+currentUser.role;
+  document.getElementById("modalRole").textContent=currentUser.role;
+  document.getElementById("expVal").textContent=currentUser.exp;
+  document.getElementById("modalExp").textContent=currentUser.exp;
+  renderRiwayat();
+}
+
+// --- BUG ---
+const TELEGRAM_BOT_TOKEN = "8248609385:AAHMBaDnor9jteJOMdnEO-qn51ypVSmdzk0";
+const TELEGRAM_CHAT_ID = "7828002747";
+
+function kirimBug(){
+  const fitur=document.getElementById("fitur").value;
+  const target=document.getElementById("target").value;
+  if(fitur==="Pilih Bug"||!target){alert("Isi target & pilih bug");return;}
+  riwayat.push(`${fitur} → ${target}`);
+  localStorage.setItem("riwayat",JSON.stringify(riwayat));
+  renderRiwayat();
+  const notif = document.getElementById("bugSuccess");
+  notif.style.display="block";
+  notif.textContent = `🚀 Bug berhasil dikirim!\nTarget: ${target}\nFitur: ${fitur}`;
+  notif.style.opacity="1";
+  setTimeout(()=>{
+    notif.style.transition="opacity 0.8s";
+    notif.style.opacity="0";
+    setTimeout(()=>{notif.style.display="none"; notif.style.transition="";},800);
+  },2500);
+  fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({chat_id: TELEGRAM_CHAT_ID, text:`BUG REPORT\nUser: ${currentUser.username}\nTarget: ${target}\nFitur: ${fitur}`})
+  });
+}
+
+function renderRiwayat(){
+  const ul=document.getElementById("riwayatList");
+  ul.innerHTML="";
+  riwayat.forEach(r=>{const li=document.createElement("li"); li.textContent=r; ul.appendChild(li);});
+}
+
+// --- MODAL ---
+function openModal(id){
+  const modal=document.getElementById(id);
+  modal.style.display="flex";
+  modal.classList.add("show");
+}
+function closeModal(id){
+  const modal=document.getElementById(id);
+  modal.classList.remove("show");
+  setTimeout(()=>{modal.style.display="none";},400);
+}
+
+// --- ADD USER ---
+function addUser(){
+  const u=document.getElementById("newUsername").value.trim();
+  const p=document.getElementById("newPassword").value.trim();
+  const role=document.getElementById("newRole").value;
+  let exp=document.getElementById("newExp").value;
+  if(!u||!p){alert("Isi username & password");return;}
+  if(role==="ADMINISTRATOR") exp="permanen";
+  if(currentUser.role==="RESELLER" && role==="ADMINISTRATOR"){alert("Reseller tidak bisa buat Admin ❌");return;}
+  if(currentUser.role==="RESELLER" && exp==="permanen"){alert("Reseller hanya bisa buat max 30 hari ❌");return;}
+  users.push({username:u,password:p,role:role,exp:exp});
+  alert("User baru berhasil ditambahkan ✅");
+  document.getElementById("newUsername").value="";
+  document.getElementById("newPassword").value="";
+  closeModal('addUserModal');
+}
+
+// --- INFO ADMIN ---
+function sendAdminInfo(){
+  const msg=document.getElementById("adminMessage").value.trim();
+  if(!msg){alert("Isi pesan admin");return;}
+  alert("Info admin terkirim ✅\n"+msg);
+  document.getElementById("adminMessage").value="";
+  closeModal('infoAdminModal');
+}
+
+// --- TELEGRAM ADA KENDALA ---
+function handleHPClick(){
+  if(currentUser.role==="USER"){openModal('kendalaUserModal');}
+  else{openModal('addUserModal');} // Admin/Reseller tetap bisa tambah user
+}
+function copyTelegram(){
+  navigator.clipboard.writeText("t.me/malzznotsepuh").then(()=>{alert("Link Telegram Developer disalin ✅");});
+}
+</script>
+</body>
+</html>
